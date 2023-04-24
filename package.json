@@ -1,0 +1,43 @@
+{
+  "name": "chatgpt-extension",
+  "displayName": "ChGPT Ext",
+  "description": "An extension that allows users to access easily access ChatGPT directly from VSCode and input code directly into your files. As the name suggests, it's goal is to reduce the amount time spent on actually typing code.",
+  "version": "0.0.1",
+  "icon": "https://imgur.com/a/GBQCdL1",
+  "publisher": "cadamn12",
+  "activationEvents": [],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.noCode",
+        "title": "NoCode Code Scriptor"
+      }
+    ],
+    "views": {
+      "noCodeInput": [
+        {
+          "id": "noCodeInputView",
+          "name": "NoCode Input"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "extension.noCode",
+          "group": "1_general"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "openai": "^3.2.1"
+  }
+}

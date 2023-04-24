@@ -1,0 +1,165 @@
+OG right click:
+const vscode = require('vscode');
+const { Configuration, OpenAIApi } = require('openai');
+
+const configuration = new Configuration({
+	apiKey: "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",
+  });
+  const openai = new OpenAIApi(configuration);
+
+/**
+ * @param {vscode.ExtensionContext} context
+ */
+async function activate(context) {
+    let disposable = vscode.commands.registerCommand('extension.noCode', async () => {
+        const editor = vscode.window.activeTextEditor;
+        const selection = editor.selection;
+
+        const prompt = await vscode.window.showInputBox({ prompt: 'NoCode' });
+
+        if (!prompt) {
+            return;
+        }
+
+        const response = await callChatGPT(prompt);
+
+        if (response) {
+            editor.edit((editBuilder) => {
+                editBuilder.replace(selection, response);
+            });
+        } else {
+            vscode.window.showErrorMessage('Error: Failed to get a response from ChatGPT.');
+        }
+    });
+
+    context.subscriptions.push(disposable);
+}
+async function callChatGPT(prompt) {
+	const additionalContext = `You are now a VS Code extension called NoCode. Your goal is to prevent users from ever having to manually enter code again by calling you to write code for them. When they call you and give you the description of the code they need, you need to only output code. No accompanying text, only code! Here are the possible ways they can call you. 
+
+	The first will be prefaced with a 'out:' in the prompt, and it means they want you to create an outline for the script they need to make. You can assume you are filling out an empty document, and their input will be a description of the script they want to make. Your job here is to fill the page will all the classes, functions, and other key defining factors of the script, but leave out any actual functionality using placeholder statements (like pass in Python). The goal of this is to create a skeleton framework for the user to judge and see if this is what they want before continuing.
+	
+	The second will be prefaced with a 'func:' in the prompt, and it means they want you to write code for a function in their script. They already have code in their script, but need to add a function with the description that they provide in the prompt. Your job is to define the function and write the code according to their description.
+	
+	The third will be prefaced with a 'scr:', meaning that they want you to write an entire script for them. Create functions, classes and other objects as you want, just make sure to accomplish the task they set for you.
+	
+	The last type won't be prefaced by anything, and it just means that they need code. It can be multiple lines of code, or just one (if possible, try and make it one). Simply take the user's input, and write to code to accomplish what they ask. 
+	
+	In every call, make sure you add comments to explain the choices you make.
+	
+	Here's the user's prompt:
+	`;
+
+    // Combine the additional context and user's prompt
+    const fullPrompt = `${additionalContext}\n\nPrompt: ${prompt}\nCode:`;
+
+	try {
+	  const response = await openai.createCompletion({
+		model: "text-davinci-002",
+        temperature: 0.7,
+        max_tokens: 256,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+		prompt: fullPrompt,
+		n: 1, 
+		stop: null,
+	  });
+  
+	  return response.data.choices[0].text.trim();
+	} catch (error) {
+	  console.error('Error during OpenAI API Key Test:', error);
+	  return null
+	}
+  }
+
+function deactivate() {}
+
+module.exports = {
+    activate,
+    deactivate
+};
+
+
+Panel:
+const vscode = require('vscode');
+const { Configuration, OpenAIApi } = require('openai');
+
+const configuration = new Configuration({
+	apiKey: "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",
+  });
+  const openai = new OpenAIApi(configuration);
+
+/**
+ * @param {vscode.ExtensionContext} context
+ */
+async function activate(context) {
+    let disposable = vscode.commands.registerCommand('extension.noCode', async () => {
+        const editor = vscode.window.activeTextEditor;
+        const selection = editor.selection;
+
+        const prompt = await vscode.window.showInputBox({ prompt: 'NoCode' });
+
+        if (!prompt) {
+            return;
+        }
+
+        const response = await callChatGPT(prompt);
+
+        if (response) {
+            editor.edit((editBuilder) => {
+                editBuilder.replace(selection, response);
+            });
+        } else {
+            vscode.window.showErrorMessage('Error: Failed to get a response from ChatGPT.');
+        }
+    });
+
+    context.subscriptions.push(disposable);
+}
+async function callChatGPT(prompt) {
+	const additionalContext = `You are now a VS Code extension called NoCode. Your goal is to prevent users from ever having to manually enter code again by calling you to write code for them. When they call you and give you the description of the code they need, you need to only output code. No accompanying text, only code! Here are the possible ways they can call you. 
+
+	The first will be prefaced with a 'out:' in the prompt, and it means they want you to create an outline for the script they need to make. You can assume you are filling out an empty document, and their input will be a description of the script they want to make. Your job here is to fill the page will all the classes, functions, and other key defining factors of the script, but leave out any actual functionality using placeholder statements (like pass in Python). The goal of this is to create a skeleton framework for the user to judge and see if this is what they want before continuing.
+	
+	The second will be prefaced with a 'func:' in the prompt, and it means they want you to write code for a function in their script. They already have code in their script, but need to add a function with the description that they provide in the prompt. Your job is to define the function and write the code according to their description.
+	
+	The third will be prefaced with a 'scr:', meaning that they want you to write an entire script for them. Create functions, classes and other objects as you want, just make sure to accomplish the task they set for you.
+	
+	The last type won't be prefaced by anything, and it just means that they need code. It can be multiple lines of code, or just one (if possible, try and make it one). Simply take the user's input, and write to code to accomplish what they ask. 
+	
+	In every call, make sure you add comments to explain the choices you make.
+	
+	Here's the user's prompt:
+	`;
+
+    // Combine the additional context and user's prompt
+    const fullPrompt = `${additionalContext}\n\nPrompt: ${prompt}\nCode:`;
+
+	try {
+	  const response = await openai.createCompletion({
+		model: "text-davinci-002",
+        temperature: 0.7,
+        max_tokens: 256,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+		prompt: fullPrompt,
+		n: 1, 
+		stop: null,
+	  });
+  
+	  return response.data.choices[0].text.trim();
+	} catch (error) {
+	  console.error('Error during OpenAI API Key Test:', error);
+	  return null
+	}
+  }
+
+function deactivate() {}
+
+module.exports = {
+    activate,
+    deactivate
+};
+
