@@ -1,4 +1,6 @@
 # No Code Extension
+** Note: This extension has been de-activated. It had around 150 daily users by the time of de-activation.
+
 This extension connects to OpenAI's GPT-3.5 model, and allows users to directly input code from GPT and reduce time spent manually coding!
 
 ![Demo Video](https://imgur.com/a/DxZ7lGe)
